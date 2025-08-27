@@ -1,0 +1,27 @@
+{
+    "name": "",
+    "description": "",
+    "category": "",
+    "publisher": {
+        "name": "",
+        "url": ""
+    },
+    "documentModels": [
+        {
+            "id": "simple-todo",
+            "name": "Simple Todo"
+        }
+    ],
+    "editors": [
+        {
+            "id": "simple-todo-editor",
+            "name": "Simple Todo Editor",
+            "documentTypes": [
+                "simple-todo"
+            ]
+        }
+    ],
+    "apps": [],
+    "subgraphs": [],
+    "importScripts": []
+}

@@ -1,0 +1,61 @@
+scalar Amount_Tokens
+scalar EthereumAddress
+scalar Amount_Percentage
+scalar EmailAddress
+scalar Date
+scalar DateTime
+scalar URL
+scalar Amount_Money
+scalar OLabel
+scalar Currency
+scalar PHID
+scalar OID
+scalar Amount_Fiat
+scalar Amount_Currency
+scalar Amount_Crypto
+scalar Amount
+scalar Upload
+type TodoItem {
+  id: OID!
+  title: String!
+  description: String
+  completed: Boolean!
+  createdAt: DateTime!
+  completedAt: DateTime
+}
+
+type SimpleTodoState {
+  todos: [TodoItem!]!
+  totalCount: Int!
+  completedCount: Int!
+}
+
+
+
+# todos
+
+input AddTodoInput {
+  id: OID!
+  title: String!
+  description: String
+  createdAt: DateTime!
+}
+
+input UpdateTodoInput {
+  id: OID!
+  title: String
+  description: String
+}
+
+input CompleteTodoInput {
+  id: OID!
+  completedAt: DateTime!
+}
+
+input UncompleteTodoInput {
+  id: OID!
+}
+
+input DeleteTodoInput {
+  id: OID!
+}
