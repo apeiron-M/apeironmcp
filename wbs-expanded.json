@@ -1,0 +1,148 @@
+{
+    "author": {
+        "name": "Powerhouse",
+        "website": "https://www.powerhouse.inc/"
+    },
+    "description": "A document model for creating and managing work breakdown structures with task hierarchy",
+    "extension": "wbs",
+    "id": "work-breakdown-structure",
+    "name": "Work Breakdown Structure", 
+    "specifications": [
+        {
+            "changeLog": [],
+            "modules": [
+                {
+                    "description": "Core WBS operations",
+                    "id": "core-module",
+                    "name": "core",
+                    "operations": [
+                        {
+                            "description": "Create a new work breakdown structure",
+                            "errors": [],
+                            "examples": [],
+                            "id": "create-wbs-op",
+                            "name": "CREATE_WBS",
+                            "reducer": "const newWBS = {\n  id: action.input.id,\n  title: action.input.title,\n  description: action.input.description || null,\n  budget: action.input.budget || null,\n  timeline: action.input.timeline || null,\n  tasks: [],\n  teamMembers: [],\n  createdAt: action.input.createdAt,\n  updatedAt: null\n};\n\nObject.assign(state, newWBS);",
+                            "schema": "input CreateWbsInput {\n  id: OID!\n  title: String!\n  description: String\n  budget: Float\n  timeline: String\n  createdAt: DateTime!\n}",
+                            "scope": "global",
+                            "template": "Create a new work breakdown structure"
+                        },
+                        {
+                            "description": "Update basic WBS information",
+                            "errors": [],
+                            "examples": [],
+                            "id": "update-wbs-info-op",
+                            "name": "UPDATE_WBS_INFO",
+                            "reducer": "if (action.input.title !== undefined) {\n  state.title = action.input.title;\n}\nif (action.input.description !== undefined) {\n  state.description = action.input.description;\n}\nif (action.input.budget !== undefined) {\n  state.budget = action.input.budget;\n}\nif (action.input.timeline !== undefined) {\n  state.timeline = action.input.timeline;\n}\nstate.updatedAt = action.input.updatedAt;",
+                            "schema": "input UpdateWbsInfoInput {\n  title: String\n  description: String\n  budget: Float\n  timeline: String\n  updatedAt: DateTime!\n}",
+                            "scope": "global",
+                            "template": "Update basic WBS information"
+                        }
+                    ]
+                },
+                {
+                    "description": "Task management operations",
+                    "id": "tasks-module",
+                    "name": "tasks",
+                    "operations": [
+                        {
+                            "description": "Create a new task",
+                            "errors": [],
+                            "examples": [],
+                            "id": "create-task-op",
+                            "name": "CREATE_TASK",
+                            "reducer": "const newTask = {\n  id: action.input.id,\n  parentTaskId: action.input.parentTaskId || null,\n  code: action.input.code,\n  title: action.input.title,\n  summary: action.input.summary || null,\n  description: action.input.description || null,\n  status: action.input.status,\n  priority: action.input.priority,\n  progress: 0,\n  estimatedHours: action.input.estimatedHours || null,\n  actualHours: null,\n  startDate: action.input.startDate || null,\n  dueDate: action.input.dueDate || null,\n  createdAt: action.input.createdAt,\n  updatedAt: null\n};\n\nstate.tasks.push(newTask);\nstate.updatedAt = action.input.createdAt;",
+                            "schema": "input CreateTaskInput {\n  id: OID!\n  parentTaskId: OID\n  code: String!\n  title: String!\n  summary: String\n  description: String\n  status: TaskStatus!\n  priority: TaskPriority!\n  estimatedHours: Int\n  startDate: DateTime\n  dueDate: DateTime\n  createdAt: DateTime!\n}",
+                            "scope": "global",
+                            "template": "Create a new task"
+                        },
+                        {
+                            "description": "Update task information",
+                            "errors": [
+                                {
+                                    "code": "TASK_NOT_FOUND",
+                                    "description": "Task with the specified ID was not found",
+                                    "id": "task-not-found-update",
+                                    "name": "TaskNotFoundError",
+                                    "template": ""
+                                }
+                            ],
+                            "examples": [],
+                            "id": "update-task-op",
+                            "name": "UPDATE_TASK",
+                            "reducer": "const taskIndex = state.tasks.findIndex(task => task.id === action.input.taskId);\n\nif (taskIndex === -1) {\n  throw new TaskNotFoundError(`Task with ID ${action.input.taskId} not found`);\n}\n\nconst task = state.tasks[taskIndex];\n\nif (action.input.code !== undefined) task.code = action.input.code;\nif (action.input.title !== undefined) task.title = action.input.title;\nif (action.input.summary !== undefined) task.summary = action.input.summary;\nif (action.input.description !== undefined) task.description = action.input.description;\nif (action.input.status !== undefined) task.status = action.input.status;\nif (action.input.priority !== undefined) task.priority = action.input.priority;\nif (action.input.progress !== undefined) task.progress = action.input.progress;\nif (action.input.estimatedHours !== undefined) task.estimatedHours = action.input.estimatedHours;\nif (action.input.actualHours !== undefined) task.actualHours = action.input.actualHours;\nif (action.input.startDate !== undefined) task.startDate = action.input.startDate;\nif (action.input.dueDate !== undefined) task.dueDate = action.input.dueDate;\n\ntask.updatedAt = action.input.updatedAt;\nstate.updatedAt = action.input.updatedAt;",
+                            "schema": "input UpdateTaskInput {\n  taskId: OID!\n  code: String\n  title: String\n  summary: String\n  description: String\n  status: TaskStatus\n  priority: TaskPriority\n  progress: Int\n  estimatedHours: Int\n  actualHours: Int\n  startDate: DateTime\n  dueDate: DateTime\n  updatedAt: DateTime!\n}",
+                            "scope": "global",
+                            "template": "Update task information"
+                        },
+                        {
+                            "description": "Move task to different parent or make it a root task",
+                            "errors": [
+                                {
+                                    "code": "TASK_NOT_FOUND",
+                                    "description": "Task with the specified ID was not found",
+                                    "id": "task-not-found-move",
+                                    "name": "TaskNotFoundError",
+                                    "template": ""
+                                },
+                                {
+                                    "code": "PARENT_TASK_NOT_FOUND",
+                                    "description": "Parent task with the specified ID was not found",
+                                    "id": "parent-task-not-found",
+                                    "name": "ParentTaskNotFoundError",
+                                    "template": ""
+                                },
+                                {
+                                    "code": "CIRCULAR_DEPENDENCY",
+                                    "description": "Cannot make a task its own descendant",
+                                    "id": "circular-dependency",
+                                    "name": "CircularDependencyError",
+                                    "template": ""
+                                }
+                            ],
+                            "examples": [],
+                            "id": "move-task-op",
+                            "name": "MOVE_TASK",
+                            "reducer": "const taskIndex = state.tasks.findIndex(task => task.id === action.input.taskId);\n\nif (taskIndex === -1) {\n  throw new TaskNotFoundError(`Task with ID ${action.input.taskId} not found`);\n}\n\n// Check if new parent exists (if specified)\nif (action.input.newParentTaskId) {\n  const parentExists = state.tasks.some(task => task.id === action.input.newParentTaskId);\n  if (!parentExists) {\n    throw new ParentTaskNotFoundError(`Parent task with ID ${action.input.newParentTaskId} not found`);\n  }\n  \n  // Check for circular dependency (task cannot be ancestor of new parent)\n  const isCircular = (parentId, targetId) => {\n    if (parentId === targetId) return true;\n    const parent = state.tasks.find(t => t.id === parentId);\n    return parent && parent.parentTaskId && isCircular(parent.parentTaskId, targetId);\n  };\n  \n  if (isCircular(action.input.newParentTaskId, action.input.taskId)) {\n    throw new CircularDependencyError('Cannot create circular dependency in task hierarchy');\n  }\n}\n\nstate.tasks[taskIndex].parentTaskId = action.input.newParentTaskId || null;\nstate.tasks[taskIndex].updatedAt = action.input.updatedAt;\nstate.updatedAt = action.input.updatedAt;",
+                            "schema": "input MoveTaskInput {\n  taskId: OID!\n  newParentTaskId: OID\n  updatedAt: DateTime!\n}",
+                            "scope": "global",
+                            "template": "Move task to different parent"
+                        },
+                        {
+                            "description": "Delete a task and all its subtasks",
+                            "errors": [
+                                {
+                                    "code": "TASK_NOT_FOUND",
+                                    "description": "Task with the specified ID was not found",
+                                    "id": "task-not-found-delete",
+                                    "name": "TaskNotFoundError",
+                                    "template": ""
+                                }
+                            ],
+                            "examples": [],
+                            "id": "delete-task-op",
+                            "name": "DELETE_TASK",
+                            "reducer": "const taskIndex = state.tasks.findIndex(task => task.id === action.input.taskId);\n\nif (taskIndex === -1) {\n  throw new TaskNotFoundError(`Task with ID ${action.input.taskId} not found`);\n}\n\n// Recursively collect all descendant task IDs\nconst getDescendantIds = (parentId) => {\n  const children = state.tasks.filter(task => task.parentTaskId === parentId);\n  let descendants = children.map(child => child.id);\n  children.forEach(child => {\n    descendants = descendants.concat(getDescendantIds(child.id));\n  });\n  return descendants;\n};\n\nconst taskId = action.input.taskId;\nconst descendantIds = getDescendantIds(taskId);\nconst allIdsToDelete = [taskId, ...descendantIds];\n\n// Remove all tasks (parent and descendants)\nstate.tasks = state.tasks.filter(task => !allIdsToDelete.includes(task.id));\nstate.updatedAt = action.input.updatedAt;",
+                            "schema": "input DeleteTaskInput {\n  taskId: OID!\n  updatedAt: DateTime!\n}",
+                            "scope": "global",
+                            "template": "Delete task and subtasks"
+                        }
+                    ]
+                }
+            ],
+            "state": {
+                "global": {
+                    "examples": [],
+                    "initialValue": "{\n  \"id\": \"\",\n  \"title\": \"\",\n  \"description\": \"\",\n  \"budget\": null,\n  \"timeline\": \"\",\n  \"tasks\": [],\n  \"teamMembers\": [],\n  \"createdAt\": \"\",\n  \"updatedAt\": null\n}",
+                    "schema": "type WbsTask {\n  id: OID!\n  parentTaskId: OID\n  code: String!\n  title: String!\n  summary: String\n  description: String\n  status: TaskStatus!\n  priority: TaskPriority!\n  progress: Int\n  estimatedHours: Int\n  actualHours: Int\n  startDate: DateTime\n  dueDate: DateTime\n  createdAt: DateTime!\n  updatedAt: DateTime\n}\n\ntype TeamMember {\n  id: OID!\n  name: String!\n  email: String\n  role: String\n  avatar: String\n  isActive: Boolean!\n  joinedAt: DateTime!\n}\n\nenum TaskStatus {\n  SCOPING\n  TODO\n  IN_PROGRESS\n  REVIEW\n  DONE\n  BLOCKED\n  CANCELLED\n}\n\nenum TaskPriority {\n  LOW\n  MEDIUM\n  HIGH\n  STRETCH\n  CRITICAL\n}\n\ntype WorkBreakdownStructureState {\n  id: OID!\n  title: String\n  description: String\n  budget: Float\n  timeline: String\n  tasks: [WbsTask!]!\n  teamMembers: [TeamMember!]!\n  createdAt: DateTime!\n  updatedAt: DateTime\n}"
+                },
+                "local": {
+                    "examples": [],
+                    "initialValue": "{}",
+                    "schema": ""
+                }
+            },
+            "version": 1
+        }
+    ]
+}

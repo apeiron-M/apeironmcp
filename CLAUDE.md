@@ -76,60 +76,6 @@ When the user requests to create or make changes on a document editor, follow th
 - Use TypeScript for type safety, avoid using any and type casting
 - Always check for type and lint errors after creating or modifying the editor
 
-### Document Editor Implementation Pattern
-
-**CRITICAL**: When implementing document editors, use the modern React hooks pattern from `@powerhousedao/reactor-browser`:
-
-#### Required Imports and Setup
-
-```typescript
-import { useDocumentById } from "@powerhousedao/reactor-browser";
-import { useCallback } from "react";
-import type { EditorProps } from "document-model";
-import {
-  type YourDocumentType,
-  actions,
-} from "../../document-models/your-model/index.js";
-
-export type IProps = EditorProps;
-
-export default function Editor(props: IProps) {
-  const { document: initialDocument } = props;
-  const [document, dispatch] = useDocumentById(initialDocument.header.id);
-  const typedDocument = document as YourDocumentType;
-```
-
-#### Key Implementation Rules
-
-1. **NEVER use `props.dispatch` directly** - it doesn't exist on `EditorProps`
-2. **ALWAYS use `useDocumentById` hook** to get reactive document state and dispatch function
-3. **Cast the document to your specific type** for proper TypeScript support
-4. **Use `useCallback` for event handlers** to optimize performance
-5. **Access state via the typed document**: `typedDocument.state.global` or `typedDocument.state.local`
-
-#### Example Event Handler Pattern
-
-```typescript
-const handleAction = useCallback((param: string) => {
-  dispatch(actions.yourAction({ param }));
-}, [dispatch]);
-```
-
-#### State Access Pattern
-
-```typescript
-// For type safety, cast the global/local state
-const globalState = typedDocument.state.global as { 
-  yourField: YourType; 
-  otherField: OtherType; 
-};
-
-// Then use the typed state
-const value = globalState.yourField;
-```
-
-This pattern ensures proper reactivity, type safety, and follows the latest Powerhouse editor conventions.
-
 ## ⚠️ CRITICAL: Generated Files & Modification Rules
 
 ### Generated Files Rule
@@ -352,3 +298,220 @@ throw new MissingIdError("message");
 - Reflect user intent with descriptive names
 - Simple, specific fields over complex nested types
 - System auto-generates `OID` for new objects (users don't provide manually)
+
+
+## UI Component Guidelines
+
+### Core UI Libraries
+
+**MANDATORY**: Use the following Powerhouse UI libraries for all editor components:
+
+- **Primary Components**: `@powerhousedao/document-engineering` for core UI elements
+  - Forms: `TextInput`, `Textarea`, `Select`
+  - Tables: `ObjectSetTable`, `ColumnDef`, `ColumnAlignment`
+  - Navigation: `SidebarProvider`, `Sidebar`, `useSidebar`
+  - Layouts: `Icon` (document-engineering variant)
+
+- **Design System**: `@powerhousedao/design-system` for design consistency
+  - Icons: `Icon` (design-system variant)
+  - Buttons: `Button`
+  - Toast: `toast`, `ToastContainer`
+  - Other design system components
+
+### Styling Requirements
+
+**MANDATORY**: Follow TailwindCSS ^4.1.4 styling patterns:
+
+- **Inline Styling**: Apply CSS styles inline using `className` prop
+- **No External CSS**: Avoid creating separate CSS files for component-specific styles
+- **Responsive Design**: Use Tailwind responsive utilities (`sm:`, `md:`, `lg:`, etc.)
+- **Dark Mode**: Support dark mode using `.dark` class variant
+
+### Component Architecture Patterns
+
+**MANDATORY**: Follow these architectural patterns when building UI components:
+
+#### Table Components
+- Use `ObjectSetTable` for data display with editable cells
+- Define column configurations using `ColumnDef<T>` with proper typing
+- Implement `onSave`, `onAdd`, and `onDelete` handlers for data operations
+- Use `renderCell` for custom cell rendering with business logic
+
+```typescript
+const columns = useMemo<Array<ColumnDef<T>>>(
+  () => [
+    {
+      field: "fieldName",
+      title: "Display Title",
+      editable: true,
+      align: "left" as ColumnAlignment,
+      onSave: (newValue, context) => {
+        // Handle save operation
+        dispatch(actions.updateEntity({ id: context.row.id, field: newValue }));
+        return true;
+      },
+    },
+  ],
+  []
+);
+```
+
+#### Form Components
+- Use `TextInput`, `Textarea`, and `Select` from document-engineering
+- Implement `onBlur` handlers for auto-save functionality
+- Use `defaultValue` for initial values, not `value` for uncontrolled components
+- Include proper labels and validation feedback
+
+```typescript
+<TextInput
+  className="w-full"
+  label="Field Label"
+  defaultValue={state.fieldValue}
+  onBlur={(e) => {
+    if (e.target.value !== state.fieldValue) {
+      dispatch(actions.updateField({ field: e.target.value }));
+    }
+  }}
+/>
+```
+
+#### Select Component Usage
+**MANDATORY**: Use the `Select` component from `@powerhousedao/document-engineering` for dropdown selections:
+
+```typescript
+<Select
+  label="Field Label"
+  options={[
+    { label: "Option 1", value: "OPTION_1" },
+    { label: "Option 2", value: "OPTION_2" },
+    { label: "Option 3", value: "OPTION_3" },
+  ]}
+  value={state.fieldValue}
+  onChange={(value) => {
+    dispatch(actions.updateField({ field: value as FieldType }));
+  }}
+/>
+```
+
+**Key Select Component Properties:**
+- **`label`**: String - The field label displayed above the select
+- **`options`**: Array of `{ label: string, value: string }` - Dropdown options
+- **`value`**: String - Currently selected value from state
+- **`onChange`**: Function - Handler that receives the selected value
+- **No external wrapper needed** - Component includes its own label and styling
+
+#### Navigation Components
+- Use `SidebarProvider` and `Sidebar` for hierarchical navigation
+- Implement breadcrumb navigation for deep navigation paths
+- Use `useSidebar` hook for sidebar state management
+- Support collapsible sidebar with width tracking
+
+### Icon Usage
+
+**MANDATORY**: Use appropriate icon sources:
+
+- **Document Operations**: Use `Icon` from `@powerhousedao/document-engineering`
+- **UI Elements**: Use `Icon` from `@powerhousedao/design-system`
+- **Interactive Icons**: Include `onClick` handlers and hover states
+- **Accessibility**: Provide proper `aria-label` attributes for icon buttons
+
+### State Management Integration
+
+**MANDATORY**: Integrate UI components with document state:
+
+- **Dispatch Actions**: Use document model actions for all state changes
+- **State Binding**: Connect component state to document global state
+- **Real-time Updates**: Use `useEffect` and `useMemo` for reactive updates
+- **ID Generation**: Use `generateId()` from document-model for new entities
+
+### Responsive Design Patterns
+
+**MANDATORY**: Implement responsive behavior:
+
+- **Sidebar Adaptation**: Support collapsible sidebar with dynamic width calculation
+- **Table Responsiveness**: Use appropriate column widths and overflow handling
+- **Mobile Support**: Ensure components work on mobile devices
+- **Dynamic Layouts**: Adapt layouts based on available screen space
+
+
+## Custom Drive Explorer Creation Workflow
+
+### Problem Statement
+You need a custom, application-like interface to browse, organize, or interact with specific types of documents stored within a Powerhouse drive, going beyond the standard file listing.
+
+### Prerequisites
+- Powerhouse CLI (ph-cmd) installed
+- A Powerhouse project initialized (ph init)
+- MCP server connection available
+
+### Step 1: Generate Drive Explorer Template
+Navigate to your project root and run the generate command with the `--drive-editor` flag:
+
+```bash
+# Replace <drive-app-name> with your desired name (e.g., network-admin)
+ph generate --drive-editor <drive-app-name>
+```
+
+### Step 2: Update Module Configuration
+After generation, customize the module configuration in `editors/<drive-app-name>/index.ts`:
+
+```typescript
+export const module: DriveEditorModule = {
+  Component: Editor,
+  documentTypes: ["powerhouse/document-drive"],
+  config: {
+    id: "<drive-app-name>", // Use clean, simple ID
+    disableExternalControls: true,
+    documentToolbarEnabled: true,
+    showSwitchboardLink: true,
+  },
+};
+```
+
+### Step 3: Customize UI Components
+- **Main Explorer** (`components/DriveExplorer.tsx`): Update sidebar title and empty state messages
+- **Document Creation** (`components/CreateDocument.tsx`): Customize document type filtering if needed
+- **Folder Tree** (`components/FolderTree.tsx`): Customize navigation behavior
+- **Editor Container** (`components/EditorContainer.tsx`): Customize toolbar actions
+
+### Step 4: Update Powerhouse Manifest
+Add the drive explorer to the `apps` section in `powerhouse.manifest.json`:
+
+```json
+{
+  "apps": [
+    {
+      "id": "powerhouse/<drive-app-name>",
+      "name": "<Display Name> Drive Explorer",
+      "description": "Custom drive explorer for managing and organizing <specific use case> documents",
+      "documentTypes": ["powerhouse/document-drive"]
+    }
+  ]
+}
+```
+
+### Step 5: Update Module Exports
+Ensure the drive explorer is exported in `editors/index.ts`:
+
+```typescript
+export { module as <PascalCaseName>DriveExplorer } from "./<drive-app-name>/index.js";
+```
+
+### Key Customization Points
+- **Sidebar Title**: Brand the explorer for your specific use case
+- **Empty State Messages**: Provide context-specific guidance
+- **Document Filtering**: Filter available document types if needed
+- **UI Styling**: Customize layout, colors, and spacing using TailwindCSS
+- **Folder Operations**: Customize folder creation and organization behavior
+
+### Expected Outcome
+- A new directory `editors/<drive-app-name>/` with complete drive explorer implementation
+- Customizable interface for browsing, creating, and managing documents within drives
+- Integration with existing document editors for seamless workflow
+- Proper registration in powerhouse.manifest.json as an app module
+
+### Notes
+- Drive explorers target `powerhouse/document-drive` document type
+- They provide specialized interfaces for managing documents of any type within drives
+- Unlike document editors (which edit specific document types), drive explorers manage collections of documents
+- The generated template includes responsive layout, folder navigation, and document creation workflows

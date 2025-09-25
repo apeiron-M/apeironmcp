@@ -1,0 +1,64 @@
+{
+  "id": "powerhouse/work-breakdown-structure",
+  "name": "Work Breakdown Structure",
+  "extension": "wbs",
+  "description": "A document model for creating and managing work breakdown structures",
+  "author": {
+    "name": "Powerhouse",
+    "website": "https://powerhouse.ai"
+  },
+  "specs": [
+    {
+      "version": "1.0.0",
+      "changeLog": "Initial version",
+      "state": {
+        "global": {
+          "schema": "type WorkBreakdownStructureState {\n  id: OID!\n  title: String\n  description: String\n  budget: Float\n  timeline: String\n  tasks: [WBSTask!]!\n  teamMembers: [TeamMember!]!\n  createdAt: DateTime!\n  updatedAt: DateTime\n}\n\ntype WBSTask {\n  id: OID!\n  parentTaskId: OID\n  code: String!\n  title: String!\n  summary: String\n  description: String\n  status: TaskStatus!\n  priority: TaskPriority!\n  progress: Int\n  estimatedHours: Int\n  actualHours: Int\n  startDate: DateTime\n  dueDate: DateTime\n  createdAt: DateTime!\n  updatedAt: DateTime\n}\n\ntype TeamMember {\n  id: OID!\n  name: String!\n  email: String\n  role: String\n  avatar: String\n  isActive: Boolean!\n  joinedAt: DateTime!\n}\n\nenum TaskStatus {\n  SCOPING\n  TODO\n  IN_PROGRESS\n  REVIEW\n  DONE\n  BLOCKED\n  CANCELLED\n}\n\nenum TaskPriority {\n  LOW\n  MEDIUM\n  HIGH\n  STRETCH\n  CRITICAL\n}",
+          "initialValue": "{\n  \"id\": \"\",\n  \"title\": \"\",\n  \"description\": \"\",\n  \"budget\": null,\n  \"timeline\": \"\",\n  \"tasks\": [],\n  \"teamMembers\": [],\n  \"createdAt\": \"\",\n  \"updatedAt\": null\n}",
+          "examples": []
+        }
+      },
+      "modules": [
+        {
+          "name": "Core",
+          "description": "Core WBS operations",
+          "operations": [
+            {
+              "name": "CREATE_WBS",
+              "description": "Create a new work breakdown structure",
+              "schema": "input CreateWbsInput {\n  id: OID!\n  title: String!\n  description: String\n  budget: Float\n  timeline: String\n  createdAt: DateTime!\n}\n\noutput CreateWbsOutput {\n  id: OID!\n}",
+              "template": {},
+              "reducer": "const newWBS = {\n  id: action.input.id,\n  title: action.input.title,\n  description: action.input.description || null,\n  budget: action.input.budget || null,\n  timeline: action.input.timeline || null,\n  tasks: [],\n  teamMembers: [],\n  createdAt: action.input.createdAt,\n  updatedAt: null\n};\n\nObject.assign(state, newWBS);\n\nreturn {\n  id: state.id\n};",
+              "errors": [],
+              "examples": []
+            },
+            {
+              "name": "UPDATE_WBS_INFO",
+              "description": "Update basic WBS information",
+              "schema": "input UpdateWbsInfoInput {\n  title: String\n  description: String\n  budget: Float\n  timeline: String\n  updatedAt: DateTime!\n}\n\noutput UpdateWbsInfoOutput {\n  success: Boolean!\n}",
+              "template": {},
+              "reducer": "if (action.input.title !== undefined) {\n  state.title = action.input.title;\n}\nif (action.input.description !== undefined) {\n  state.description = action.input.description;\n}\nif (action.input.budget !== undefined) {\n  state.budget = action.input.budget;\n}\nif (action.input.timeline !== undefined) {\n  state.timeline = action.input.timeline;\n}\nstate.updatedAt = action.input.updatedAt;\n\nreturn {\n  success: true\n};",
+              "errors": [],
+              "examples": []
+            }
+          ]
+        },
+        {
+          "name": "Tasks",
+          "description": "Task management operations",
+          "operations": [
+            {
+              "name": "CREATE_TASK",
+              "description": "Create a new task",
+              "schema": "input CreateTaskInput {\n  id: OID!\n  parentTaskId: OID\n  code: String!\n  title: String!\n  summary: String\n  description: String\n  status: TaskStatus!\n  priority: TaskPriority!\n  estimatedHours: Int\n  startDate: DateTime\n  dueDate: DateTime\n  createdAt: DateTime!\n}\n\noutput CreateTaskOutput {\n  id: OID!\n}",
+              "template": {},
+              "reducer": "const newTask = {\n  id: action.input.id,\n  parentTaskId: action.input.parentTaskId || null,\n  code: action.input.code,\n  title: action.input.title,\n  summary: action.input.summary || null,\n  description: action.input.description || null,\n  status: action.input.status,\n  priority: action.input.priority,\n  progress: 0,\n  estimatedHours: action.input.estimatedHours || null,\n  actualHours: null,\n  startDate: action.input.startDate || null,\n  dueDate: action.input.dueDate || null,\n  createdAt: action.input.createdAt,\n  updatedAt: null\n};\n\nstate.tasks.push(newTask);\nstate.updatedAt = action.input.createdAt;\n\nreturn {\n  id: newTask.id\n};",
+              "errors": [],
+              "examples": []
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,281 @@
+scalar Amount_Tokens
+scalar EthereumAddress
+scalar Amount_Percentage
+scalar EmailAddress
+scalar Date
+scalar DateTime
+scalar URL
+scalar Amount_Money
+scalar OLabel
+scalar Currency
+scalar PHID
+scalar OID
+scalar Amount_Fiat
+scalar Amount_Currency
+scalar Amount_Crypto
+scalar Amount
+scalar Upload
+
+type TaskInput {
+  id: OID!
+  title: String!
+  description: String
+  type: TaskDataType!
+  isRequired: Boolean!
+  linkedTaskOutputId: OID
+  createdAt: DateTime!
+}
+
+type TaskOutput {
+  id: OID!
+  title: String!
+  description: String
+  type: TaskDataType!
+  deliveryFormat: String
+  createdAt: DateTime!
+}
+
+type WbsTask {
+  id: OID!
+  deliverableId: OID
+  parentTaskId: OID
+  ownerId: OID
+  code: String!
+  title: String!
+  summary: String
+  description: String
+  status: TaskStatus!
+  priority: TaskPriority!
+  progress: Int
+  estimatedHours: Int
+  actualHours: Int
+  startDate: DateTime
+  dueDate: DateTime
+  inputs: [TaskInput!]!
+  outputs: [TaskOutput!]!
+  createdAt: DateTime!
+  updatedAt: DateTime
+}
+
+type TeamMember {
+  id: OID!
+  name: String!
+  email: String
+  role: String
+  avatar: String
+  isActive: Boolean!
+  joinedAt: DateTime!
+}
+
+enum TaskStatus {
+  SCOPING
+  TODO
+  IN_PROGRESS
+  REVIEW
+  DONE
+  BLOCKED
+  CANCELLED
+}
+
+enum TaskPriority {
+  LOW
+  MEDIUM
+  HIGH
+  STRETCH
+  CRITICAL
+}
+
+enum TaskDataType {
+  DOCUMENT
+  DATA
+  CODE
+  DESIGN
+  APPROVAL
+  FEEDBACK
+  RESOURCE
+  DELIVERABLE
+}
+
+type Deliverable {
+  id: OID!
+  title: String!
+  description: String
+  timeline: String
+  status: DeliverableStatus!
+  createdAt: DateTime!
+  updatedAt: DateTime
+}
+
+enum DeliverableStatus {
+  PLANNING
+  IN_PROGRESS
+  REVIEW
+  COMPLETED
+  CANCELLED
+}
+
+type WorkBreakdownStructureState {
+  id: OID!
+  title: String
+  description: String
+  deliverables: [Deliverable!]!
+  tasks: [WbsTask!]!
+  teamMembers: [TeamMember!]!
+  createdAt: DateTime!
+  updatedAt: DateTime
+}
+
+# core
+
+input CreateWbsInput {
+  id: OID!
+  title: String!
+  description: String
+  createdAt: DateTime!
+}
+
+input UpdateWbsInfoInput {
+  title: String
+  description: String
+  updatedAt: DateTime!
+}
+
+# tasks
+
+input CreateTaskInput {
+  id: OID!
+  deliverableId: OID
+  parentTaskId: OID
+  ownerId: OID
+  code: String!
+  title: String!
+  summary: String
+  description: String
+  status: TaskStatus!
+  priority: TaskPriority!
+  estimatedHours: Int
+  startDate: DateTime
+  dueDate: DateTime
+  createdAt: DateTime!
+}
+
+input UpdateTaskInput {
+  taskId: OID!
+  deliverableId: OID
+  ownerId: OID
+  code: String
+  title: String
+  summary: String
+  description: String
+  status: TaskStatus
+  priority: TaskPriority
+  progress: Int
+  estimatedHours: Int
+  actualHours: Int
+  startDate: DateTime
+  dueDate: DateTime
+  updatedAt: DateTime!
+}
+
+input MoveTaskInput {
+  taskId: OID!
+  newParentTaskId: OID
+  updatedAt: DateTime!
+}
+
+input DeleteTaskInput {
+  taskId: OID!
+  updatedAt: DateTime!
+}
+
+# taskIO
+
+input AddTaskInputInput {
+  taskId: OID!
+  id: OID!
+  title: String!
+  description: String
+  type: TaskDataType!
+  isRequired: Boolean
+  linkedTaskOutputId: OID
+  createdAt: DateTime!
+}
+
+input AddTaskOutputInput {
+  taskId: OID!
+  id: OID!
+  title: String!
+  description: String
+  type: TaskDataType!
+  deliveryFormat: String
+  createdAt: DateTime!
+}
+
+input RemoveTaskInputInput {
+  taskId: OID!
+  inputId: OID!
+  updatedAt: DateTime!
+}
+
+input RemoveTaskOutputInput {
+  taskId: OID!
+  outputId: OID!
+  updatedAt: DateTime!
+}
+
+# team
+
+input AddTeamMemberInput {
+  id: OID!
+  name: String!
+  email: String
+  role: String
+  avatar: String
+  joinedAt: DateTime!
+}
+
+input UpdateTeamMemberInput {
+  memberId: OID!
+  name: String
+  email: String
+  role: String
+  avatar: String
+  isActive: Boolean
+  updatedAt: DateTime!
+}
+
+input RemoveTeamMemberInput {
+  memberId: OID!
+  updatedAt: DateTime!
+}
+
+# deliverables
+
+input CreateDeliverableInput {
+  id: OID!
+  title: String!
+  description: String
+  timeline: String
+  status: DeliverableStatus!
+  createdAt: DateTime!
+}
+
+input UpdateDeliverableInput {
+  deliverableId: OID!
+  title: String
+  description: String
+  timeline: String
+  status: DeliverableStatus
+  updatedAt: DateTime!
+}
+
+input DeleteDeliverableInput {
+  deliverableId: OID!
+  updatedAt: DateTime!
+}
+
+input AssignTasksToDeliverableInput {
+  deliverableId: OID!
+  taskIds: [OID!]!
+  updatedAt: DateTime!
+}

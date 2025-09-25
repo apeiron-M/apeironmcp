@@ -1,0 +1,368 @@
+import type { DocumentModelState } from "document-model";
+
+export const documentModel: DocumentModelState = {
+  author: {
+    name: "Jetstream",
+    website: "https://jetstream.legal",
+  },
+  description:
+    "A comprehensive needs analysis questionnaire for crypto startups, DAOs, and network organizations to assess the suitability of Swiss Associations as legal structures for operational hubs",
+  extension: "lsna",
+  id: "jetstream/legal-structure-assessment",
+  name: "Legal Structure Needs Assessment",
+  specifications: [
+    {
+      changeLog: [],
+      modules: [
+        {
+          description:
+            "Manages organization information and existing structures",
+          id: "organization",
+          name: "Organization",
+          operations: [
+            {
+              description: "Sets the organization or project name",
+              errors: [],
+              examples: [],
+              id: "set-org-name",
+              name: "SET_ORGANIZATION_NAME",
+              reducer: "",
+              schema: "input SetOrganizationNameInput {\n    name: String!\n}",
+              scope: "global",
+              template: "Sets the organization or project name",
+            },
+            {
+              description: "Adds a multisig wallet to the organization",
+              errors: [],
+              examples: [],
+              id: "add-multisig",
+              name: "ADD_MULTISIG_WALLET",
+              reducer: "",
+              schema:
+                "input AddMultisigWalletInput {\n    id: OID!\n    chain: String\n    ownershipStructure: String\n}",
+              scope: "global",
+              template: "Adds a multisig wallet to the organization",
+            },
+            {
+              description: "Adds an existing legal entity",
+              errors: [],
+              examples: [],
+              id: "add-entity",
+              name: "ADD_EXISTING_ENTITY",
+              reducer: "",
+              schema:
+                "input AddExistingEntityInput {\n    id: OID!\n    entityType: String!\n    jurisdiction: String!\n    purpose: String\n}",
+              scope: "global",
+              template: "Adds an existing legal entity",
+            },
+            {
+              description: "Adds a contributor's legal entity",
+              errors: [],
+              examples: [],
+              id: "add-contributor-entity",
+              name: "ADD_CONTRIBUTOR_ENTITY",
+              reducer: "",
+              schema:
+                "input AddContributorEntityInput {\n    id: OID!\n    entityType: String!\n    jurisdiction: String!\n    purpose: String\n}",
+              scope: "global",
+              template: "Adds a contributor's legal entity",
+            },
+            {
+              description: "Adds a contract or agreement to be transferred",
+              errors: [],
+              examples: [],
+              id: "add-contract",
+              name: "ADD_CONTRACT_ENGAGEMENT",
+              reducer: "",
+              schema:
+                "input AddContractEngagementInput {\n    id: OID!\n    nature: String!\n    description: String\n}",
+              scope: "global",
+              template: "Adds a contract or agreement to be transferred",
+            },
+            {
+              description: "Adds a financial tool or platform",
+              errors: [],
+              examples: [],
+              id: "add-financial-tool",
+              name: "ADD_FINANCIAL_TOOL",
+              reducer: "",
+              schema:
+                "input AddFinancialToolInput {\n    id: OID!\n    toolType: String!\n    description: String\n}",
+              scope: "global",
+              template: "Adds a financial tool or platform",
+            },
+            {
+              description: "Sets regulatory and compliance information",
+              errors: [],
+              examples: [],
+              id: "set-compliance",
+              name: "SET_COMPLIANCE_INFO",
+              reducer: "",
+              schema:
+                "input SetComplianceInfoInput {\n    regulatoryConcerns: String\n    licenses: String\n    complianceConcerns: String\n}",
+              scope: "global",
+              template: "Sets regulatory and compliance information",
+            },
+          ],
+        },
+        {
+          description:
+            "Handles strategic assessment including decentralization and non-profit criteria",
+          id: "strategic",
+          name: "Strategic Goals",
+          operations: [
+            {
+              description:
+                "Sets the decentralization criteria for the organization",
+              errors: [],
+              examples: [],
+              id: "set-decentral",
+              name: "SET_DECENTRALIZATION_CRITERIA",
+              reducer: "",
+              schema:
+                "input SetDecentralizationCriteriaInput {\n    isDAO: Boolean\n    isNetwork: Boolean\n    worksInDecentralized: Boolean\n    aspiresDecentralization: Boolean\n}",
+              scope: "global",
+              template:
+                "Sets the decentralization criteria for the organization",
+            },
+            {
+              description: "Sets the primary non-profit purpose",
+              errors: [],
+              examples: [],
+              id: "set-nonprofit-purpose",
+              name: "SET_NONPROFIT_PURPOSE",
+              reducer: "",
+              schema:
+                "input SetNonprofitPurposeInput {\n    primaryPurpose: String!\n    otherPurpose: String\n}",
+              scope: "global",
+              template: "Sets the primary non-profit purpose",
+            },
+            {
+              description: "Sets non-profit vs commercial indicators",
+              errors: [],
+              examples: [],
+              id: "set-nonprofit-indicators",
+              name: "SET_NONPROFIT_INDICATORS",
+              reducer: "",
+              schema:
+                "input SetNonprofitIndicatorsInput {\n    reinvestsProfits: Boolean\n    benefitsPublic: Boolean\n    revenueIsSecondary: Boolean\n    distributeProfits: Boolean\n    membershipBenefits: Boolean\n    commercialDominates: Boolean\n}",
+              scope: "global",
+              template: "Sets non-profit vs commercial indicators",
+            },
+            {
+              description: "Calculates the non-profit vs commercial score",
+              errors: [],
+              examples: [],
+              id: "calc-nonprofit-score",
+              name: "CALCULATE_NONPROFIT_SCORE",
+              reducer: "",
+              schema: "",
+              scope: "global",
+              template: "Calculates the non-profit vs commercial score",
+            },
+          ],
+        },
+        {
+          description: "Manages operational requirements and activities",
+          id: "operational",
+          name: "Operational Needs",
+          operations: [
+            {
+              description: "Adds an operational activity requirement",
+              errors: [],
+              examples: [],
+              id: "add-op-activity",
+              name: "ADD_OPERATIONAL_ACTIVITY",
+              reducer: "",
+              schema:
+                "input AddOperationalActivityInput {\n    id: OID!\n    activityType: String!\n    description: String\n}",
+              scope: "global",
+              template: "Adds an operational activity requirement",
+            },
+            {
+              description: "Adds a payment requirement",
+              errors: [],
+              examples: [],
+              id: "add-payment-req",
+              name: "ADD_PAYMENT_REQUIREMENT",
+              reducer: "",
+              schema:
+                "input AddPaymentRequirementInput {\n    id: OID!\n    paymentType: String!\n    currency: String!\n    description: String\n}",
+              scope: "global",
+              template: "Adds a payment requirement",
+            },
+            {
+              description: "Sets contributor jurisdictions",
+              errors: [],
+              examples: [],
+              id: "set-jurisdictions",
+              name: "SET_CONTRIBUTOR_JURISDICTIONS",
+              reducer: "",
+              schema:
+                "input SetContributorJurisdictionsInput {\n    jurisdictions: [String!]!\n}",
+              scope: "global",
+              template: "Sets contributor jurisdictions",
+            },
+            {
+              description: "Sets financial infrastructure requirements",
+              errors: [],
+              examples: [],
+              id: "set-financial-infra",
+              name: "SET_FINANCIAL_INFRASTRUCTURE",
+              reducer: "",
+              schema:
+                "input SetFinancialInfrastructureInput {\n    infrastructure: [String!]!\n    requiresRedundancy: Boolean!\n    needsAttestationTool: Boolean!\n}",
+              scope: "global",
+              template: "Sets financial infrastructure requirements",
+            },
+            {
+              description: "Sets monthly revenue and expenses",
+              errors: [],
+              examples: [],
+              id: "set-financial-metrics",
+              name: "SET_FINANCIAL_METRICS",
+              reducer: "",
+              schema:
+                "input SetFinancialMetricsInput {\n    monthlyRevenue: String\n    monthlyExpenses: String\n}",
+              scope: "global",
+              template: "Sets monthly revenue and expenses",
+            },
+          ],
+        },
+        {
+          description:
+            "Handles commercial activities, IP management, and fundraising",
+          id: "commercial",
+          name: "Commercial & IP",
+          operations: [
+            {
+              description: "Adds a commercial or sales activity",
+              errors: [],
+              examples: [],
+              id: "add-commercial",
+              name: "ADD_COMMERCIAL_ACTIVITY",
+              reducer: "",
+              schema:
+                "input AddCommercialActivityInput {\n    id: OID!\n    activityType: String!\n    description: String\n}",
+              scope: "global",
+              template: "Adds a commercial or sales activity",
+            },
+            {
+              description: "Adds an IP asset requirement",
+              errors: [],
+              examples: [],
+              id: "add-ip-asset",
+              name: "ADD_IP_ASSET",
+              reducer: "",
+              schema:
+                "input AddIPAssetInput {\n    id: OID!\n    assetType: String!\n    description: String\n}",
+              scope: "global",
+              template: "Adds an IP asset requirement",
+            },
+            {
+              description: "Sets IP management policies",
+              errors: [],
+              examples: [],
+              id: "set-ip-management",
+              name: "SET_IP_MANAGEMENT",
+              reducer: "",
+              schema:
+                "input SetIPManagementInput {\n    contributorsAssignIP: Boolean!\n    futureIPAssignment: Boolean!\n    licensingPlans: String\n}",
+              scope: "global",
+              template: "Sets IP management policies",
+            },
+            {
+              description: "Adds a fundraising activity",
+              errors: [],
+              examples: [],
+              id: "add-fundraising",
+              name: "ADD_FUNDRAISING_ACTIVITY",
+              reducer: "",
+              schema:
+                "input AddFundraisingActivityInput {\n    id: OID!\n    activityType: String!\n    description: String\n}",
+              scope: "global",
+              template: "Adds a fundraising activity",
+            },
+          ],
+        },
+        {
+          description:
+            "Manages governance framework and decision-making structures",
+          id: "governance",
+          name: "Governance",
+          operations: [
+            {
+              description: "Sets the governance framework",
+              errors: [],
+              examples: [],
+              id: "set-governance",
+              name: "SET_GOVERNANCE_FRAMEWORK",
+              reducer: "",
+              schema:
+                "input SetGovernanceFrameworkInput {\n    decisionMaking: String!\n    existingBylaws: Boolean!\n    bylawsDescription: String\n    plansGovernanceTokens: Boolean!\n}",
+              scope: "global",
+              template: "Sets the governance framework",
+            },
+          ],
+        },
+        {
+          description:
+            "Calculates suitability scores and generates recommendations",
+          id: "assessment",
+          name: "Assessment",
+          operations: [
+            {
+              description:
+                "Calculates overall suitability for Swiss Association",
+              errors: [],
+              examples: [],
+              id: "calc-suitability",
+              name: "CALCULATE_SUITABILITY",
+              reducer: "",
+              schema: "",
+              scope: "global",
+              template: "Calculates overall suitability for Swiss Association",
+            },
+            {
+              description: "Generates recommendations based on assessment",
+              errors: [],
+              examples: [],
+              id: "generate-recs",
+              name: "GENERATE_RECOMMENDATIONS",
+              reducer: "",
+              schema: "",
+              scope: "global",
+              template: "Generates recommendations based on assessment",
+            },
+            {
+              description: "Marks the assessment as complete",
+              errors: [],
+              examples: [],
+              id: "complete-assessment",
+              name: "COMPLETE_ASSESSMENT",
+              reducer: "",
+              schema: "",
+              scope: "global",
+              template: "Marks the assessment as complete",
+            },
+          ],
+        },
+      ],
+      state: {
+        global: {
+          examples: [],
+          initialValue:
+            '"{\\n    \\"organizationInfo\\": {\\n        \\"name\\": null,\\n        \\"multisigWallets\\": [],\\n        \\"existingEntities\\": [],\\n        \\"contributorEntities\\": [],\\n        \\"contracts\\": [],\\n        \\"financialTools\\": [],\\n        \\"regulatoryConcerns\\": null,\\n        \\"licenses\\": null,\\n        \\"complianceConcerns\\": null\\n    },\\n    \\"strategicGoals\\": {\\n        \\"decentralizationCriteria\\": {\\n            \\"isDAO\\": null,\\n            \\"isNetwork\\": null,\\n            \\"worksInDecentralized\\": null,\\n            \\"aspiresDecentralization\\": null,\\n            \\"qualifiesAsDecentralized\\": null\\n        },\\n        \\"nonProfitPurpose\\": {\\n            \\"primaryPurpose\\": null,\\n            \\"otherPurpose\\": null\\n        },\\n        \\"nonProfitIndicators\\": {\\n            \\"reinvestsProfits\\": null,\\n            \\"benefitsPublic\\": null,\\n            \\"revenueIsSecondary\\": null,\\n            \\"distributeProfits\\": null,\\n            \\"membershipBenefits\\": null,\\n            \\"commercialDominates\\": null,\\n            \\"nonProfitScore\\": 0,\\n            \\"commercialScore\\": 0,\\n            \\"overallAssessment\\": null\\n        }\\n    },\\n    \\"operationalNeeds\\": {\\n        \\"activities\\": [],\\n        \\"paymentRequirements\\": [],\\n        \\"contributorJurisdictions\\": [],\\n        \\"needsAttestationTool\\": null,\\n        \\"financialInfrastructure\\": [],\\n        \\"requiresRedundancy\\": null,\\n        \\"monthlyRevenue\\": null,\\n        \\"monthlyExpenses\\": null\\n    },\\n    \\"salesRevenue\\": {\\n        \\"commercialActivities\\": []\\n    },\\n    \\"ipManagement\\": {\\n        \\"ipAssets\\": [],\\n        \\"contributorsAssignIP\\": null,\\n        \\"futureIPAssignment\\": null,\\n        \\"licensingPlans\\": null\\n    },\\n    \\"fundraising\\": {\\n        \\"activities\\": [],\\n        \\"requiresInvestmentVehicle\\": false\\n    },\\n    \\"governance\\": {\\n        \\"decisionMaking\\": null,\\n        \\"existingBylaws\\": null,\\n        \\"bylawsDescription\\": null,\\n        \\"plansGovernanceTokens\\": null\\n    },\\n    \\"suitabilityScore\\": {\\n        \\"decentralizationMet\\": false,\\n        \\"nonProfitMet\\": false,\\n        \\"operationalNeedsMet\\": false,\\n        \\"overallSuitability\\": null,\\n        \\"recommendations\\": null,\\n        \\"requiresSeparateVehicle\\": false,\\n        \\"additionalConsiderations\\": null\\n    },\\n    \\"assessmentCompleted\\": false,\\n    \\"assessmentDate\\": null\\n}"',
+          schema:
+            "type MultisigWallet {\n    id: OID!\n    chain: String\n    ownershipStructure: String\n}\n\ntype LegalEntity {\n    id: OID!\n    entityType: String\n    jurisdiction: String\n    purpose: String\n}\n\ntype ContractEngagement {\n    id: OID!\n    nature: String\n    description: String\n}\n\ntype FinancialTool {\n    id: OID!\n    toolType: String\n    description: String\n}\n\ntype OrganizationInfo {\n    name: String\n    multisigWallets: [MultisigWallet!]!\n    existingEntities: [LegalEntity!]!\n    contributorEntities: [LegalEntity!]!\n    contracts: [ContractEngagement!]!\n    financialTools: [FinancialTool!]!\n    regulatoryConcerns: String\n    licenses: String\n    complianceConcerns: String\n}\n\ntype DecentralizationCriteria {\n    isDAO: Boolean\n    isNetwork: Boolean\n    worksInDecentralized: Boolean\n    aspiresDecentralization: Boolean\n    qualifiesAsDecentralized: Boolean\n}\n\ntype NonProfitPurpose {\n    primaryPurpose: String\n    otherPurpose: String\n}\n\ntype NonProfitIndicators {\n    reinvestsProfits: Boolean\n    benefitsPublic: Boolean\n    revenueIsSecondary: Boolean\n    distributeProfits: Boolean\n    membershipBenefits: Boolean\n    commercialDominates: Boolean\n    nonProfitScore: Float\n    commercialScore: Float\n    overallAssessment: String\n}\n\ntype StrategicGoals {\n    decentralizationCriteria: DecentralizationCriteria!\n    nonProfitPurpose: NonProfitPurpose!\n    nonProfitIndicators: NonProfitIndicators!\n}\n\ntype PaymentRequirement {\n    id: OID!\n    paymentType: String\n    currency: String\n    description: String\n}\n\ntype OperationalActivity {\n    id: OID!\n    activityType: String\n    description: String\n}\n\ntype OperationalNeeds {\n    activities: [OperationalActivity!]!\n    paymentRequirements: [PaymentRequirement!]!\n    contributorJurisdictions: [String!]!\n    needsAttestationTool: Boolean\n    financialInfrastructure: [String!]!\n    requiresRedundancy: Boolean\n    monthlyRevenue: String\n    monthlyExpenses: String\n}\n\ntype CommercialActivity {\n    id: OID!\n    activityType: String\n    description: String\n}\n\ntype SalesRevenue {\n    commercialActivities: [CommercialActivity!]!\n}\n\ntype IPAsset {\n    id: OID!\n    assetType: String\n    description: String\n}\n\ntype IPManagement {\n    ipAssets: [IPAsset!]!\n    contributorsAssignIP: Boolean\n    futureIPAssignment: Boolean\n    licensingPlans: String\n}\n\ntype FundraisingActivity {\n    id: OID!\n    activityType: String\n    description: String\n}\n\ntype Fundraising {\n    activities: [FundraisingActivity!]!\n    requiresInvestmentVehicle: Boolean\n}\n\ntype GovernanceFramework {\n    decisionMaking: String\n    existingBylaws: Boolean\n    bylawsDescription: String\n    plansGovernanceTokens: Boolean\n}\n\ntype SuitabilityScore {\n    decentralizationMet: Boolean\n    nonProfitMet: Boolean\n    operationalNeedsMet: Boolean\n    overallSuitability: String\n    recommendations: String\n    requiresSeparateVehicle: Boolean\n    additionalConsiderations: String\n}\n\ntype LegalStructureAssessmentState {\n    organizationInfo: OrganizationInfo!\n    strategicGoals: StrategicGoals!\n    operationalNeeds: OperationalNeeds!\n    salesRevenue: SalesRevenue!\n    ipManagement: IPManagement!\n    fundraising: Fundraising!\n    governance: GovernanceFramework!\n    suitabilityScore: SuitabilityScore!\n    assessmentCompleted: Boolean!\n    assessmentDate: DateTime\n}",
+        },
+        local: {
+          examples: [],
+          initialValue: '""',
+          schema: "",
+        },
+      },
+      version: 1,
+    },
+  ],
+};

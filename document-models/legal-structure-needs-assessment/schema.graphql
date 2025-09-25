@@ -1,0 +1,308 @@
+scalar Amount_Tokens
+scalar EthereumAddress
+scalar Amount_Percentage
+scalar EmailAddress
+scalar Date
+scalar DateTime
+scalar URL
+scalar Amount_Money
+scalar OLabel
+scalar Currency
+scalar PHID
+scalar OID
+scalar Amount_Fiat
+scalar Amount_Currency
+scalar Amount_Crypto
+scalar Amount
+scalar Upload
+type MultisigWallet {
+    id: OID!
+    chain: String
+    ownershipStructure: String
+}
+
+type LegalEntity {
+    id: OID!
+    entityType: String
+    jurisdiction: String
+    purpose: String
+}
+
+type ContractEngagement {
+    id: OID!
+    nature: String
+    description: String
+}
+
+type FinancialTool {
+    id: OID!
+    toolType: String
+    description: String
+}
+
+type OrganizationInfo {
+    name: String
+    multisigWallets: [MultisigWallet!]!
+    existingEntities: [LegalEntity!]!
+    contributorEntities: [LegalEntity!]!
+    contracts: [ContractEngagement!]!
+    financialTools: [FinancialTool!]!
+    regulatoryConcerns: String
+    licenses: String
+    complianceConcerns: String
+}
+
+type DecentralizationCriteria {
+    isDAO: Boolean
+    isNetwork: Boolean
+    worksInDecentralized: Boolean
+    aspiresDecentralization: Boolean
+    qualifiesAsDecentralized: Boolean
+}
+
+type NonProfitPurpose {
+    primaryPurpose: String
+    otherPurpose: String
+}
+
+type NonProfitIndicators {
+    reinvestsProfits: Boolean
+    benefitsPublic: Boolean
+    revenueIsSecondary: Boolean
+    distributeProfits: Boolean
+    membershipBenefits: Boolean
+    commercialDominates: Boolean
+    nonProfitScore: Float
+    commercialScore: Float
+    overallAssessment: String
+}
+
+type StrategicGoals {
+    decentralizationCriteria: DecentralizationCriteria!
+    nonProfitPurpose: NonProfitPurpose!
+    nonProfitIndicators: NonProfitIndicators!
+}
+
+type PaymentRequirement {
+    id: OID!
+    paymentType: String
+    currency: String
+    description: String
+}
+
+type OperationalActivity {
+    id: OID!
+    activityType: String
+    description: String
+}
+
+type OperationalNeeds {
+    activities: [OperationalActivity!]!
+    paymentRequirements: [PaymentRequirement!]!
+    contributorJurisdictions: [String!]!
+    needsAttestationTool: Boolean
+    financialInfrastructure: [String!]!
+    requiresRedundancy: Boolean
+    monthlyRevenue: String
+    monthlyExpenses: String
+}
+
+type CommercialActivity {
+    id: OID!
+    activityType: String
+    description: String
+}
+
+type SalesRevenue {
+    commercialActivities: [CommercialActivity!]!
+}
+
+type IPAsset {
+    id: OID!
+    assetType: String
+    description: String
+}
+
+type IPManagement {
+    ipAssets: [IPAsset!]!
+    contributorsAssignIP: Boolean
+    futureIPAssignment: Boolean
+    licensingPlans: String
+}
+
+type FundraisingActivity {
+    id: OID!
+    activityType: String
+    description: String
+}
+
+type Fundraising {
+    activities: [FundraisingActivity!]!
+    requiresInvestmentVehicle: Boolean
+}
+
+type GovernanceFramework {
+    decisionMaking: String
+    existingBylaws: Boolean
+    bylawsDescription: String
+    plansGovernanceTokens: Boolean
+}
+
+type SuitabilityScore {
+    decentralizationMet: Boolean
+    nonProfitMet: Boolean
+    operationalNeedsMet: Boolean
+    overallSuitability: String
+    recommendations: String
+    requiresSeparateVehicle: Boolean
+    additionalConsiderations: String
+}
+
+type LegalStructureAssessmentState {
+    organizationInfo: OrganizationInfo!
+    strategicGoals: StrategicGoals!
+    operationalNeeds: OperationalNeeds!
+    salesRevenue: SalesRevenue!
+    ipManagement: IPManagement!
+    fundraising: Fundraising!
+    governance: GovernanceFramework!
+    suitabilityScore: SuitabilityScore!
+    assessmentCompleted: Boolean!
+    assessmentDate: DateTime
+}
+
+
+
+# Organization
+
+input SetOrganizationNameInput {
+    name: String!
+}
+
+input AddMultisigWalletInput {
+    id: OID!
+    chain: String
+    ownershipStructure: String
+}
+
+input AddExistingEntityInput {
+    id: OID!
+    entityType: String!
+    jurisdiction: String!
+    purpose: String
+}
+
+input AddContributorEntityInput {
+    id: OID!
+    entityType: String!
+    jurisdiction: String!
+    purpose: String
+}
+
+input AddContractEngagementInput {
+    id: OID!
+    nature: String!
+    description: String
+}
+
+input AddFinancialToolInput {
+    id: OID!
+    toolType: String!
+    description: String
+}
+
+input SetComplianceInfoInput {
+    regulatoryConcerns: String
+    licenses: String
+    complianceConcerns: String
+}
+
+# Strategic Goals
+
+input SetDecentralizationCriteriaInput {
+    isDAO: Boolean
+    isNetwork: Boolean
+    worksInDecentralized: Boolean
+    aspiresDecentralization: Boolean
+}
+
+input SetNonprofitPurposeInput {
+    primaryPurpose: String!
+    otherPurpose: String
+}
+
+input SetNonprofitIndicatorsInput {
+    reinvestsProfits: Boolean
+    benefitsPublic: Boolean
+    revenueIsSecondary: Boolean
+    distributeProfits: Boolean
+    membershipBenefits: Boolean
+    commercialDominates: Boolean
+}
+
+# Operational Needs
+
+input AddOperationalActivityInput {
+    id: OID!
+    activityType: String!
+    description: String
+}
+
+input AddPaymentRequirementInput {
+    id: OID!
+    paymentType: String!
+    currency: String!
+    description: String
+}
+
+input SetContributorJurisdictionsInput {
+    jurisdictions: [String!]!
+}
+
+input SetFinancialInfrastructureInput {
+    infrastructure: [String!]!
+    requiresRedundancy: Boolean!
+    needsAttestationTool: Boolean!
+}
+
+input SetFinancialMetricsInput {
+    monthlyRevenue: String
+    monthlyExpenses: String
+}
+
+# Commercial & IP
+
+input AddCommercialActivityInput {
+    id: OID!
+    activityType: String!
+    description: String
+}
+
+input AddIPAssetInput {
+    id: OID!
+    assetType: String!
+    description: String
+}
+
+input SetIPManagementInput {
+    contributorsAssignIP: Boolean!
+    futureIPAssignment: Boolean!
+    licensingPlans: String
+}
+
+input AddFundraisingActivityInput {
+    id: OID!
+    activityType: String!
+    description: String
+}
+
+# Governance
+
+input SetGovernanceFrameworkInput {
+    decisionMaking: String!
+    existingBylaws: Boolean!
+    bylawsDescription: String
+    plansGovernanceTokens: Boolean!
+}
+
+# Assessment
